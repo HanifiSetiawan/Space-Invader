@@ -67,9 +67,89 @@ public class SpaceInvaders extends Application{
 			this.size = size;
 			img = image;
 		}
+		public Shot shoot() {
+			return new Shot(posX+size / 2 - Shot.size / 2, posY - Shot.size);
+		}
 		
+		public void update() {
+			if(exploding) explosionStep++;
+			destroyed = explosionStep > EXPLOSION_STEPS;
+		}
+		
+		public void draw() {
+			if (exploding) {
+				gc.drawImage(EXPLOSION_IMG, explosionStep % EXPLOSION_COL * EXPLOSION_W,
+						(explosionStep / EXPLOSION_ROWS)* EXPLOSION_H + 1, EXPLOSION_W, EXPLOSION_H, posX, posY, size, size);
+			}
+			else {
+				gc.drawImage(img, posX, posY, size, size);
+			}
+		}
+		
+		public boolean colide(Rocket other) {
+			int d = distance(this.posX + size / 2, this.posY + size / 2,
+					other.posX + other.size / 2, other.posY + other.size / 2);
+			return d < other.size / 2 + this.size / 2;
+		}
+		public void explode() {
+			exploding = true;
+			explosionStep = -1;
+		}
+	}
+	
+	//computer player
+	public class Alien extends Rocket{
+		
+		int SPEED = (score/5)+2;
+		
+		public Alien(int posX, int posY, int size, Image image) {
+			super(posX, posY, size, image);
+		}
+		
+		public void update() {
+			super.update();
+			if(!exploding && !destroyed) posY += SPEED;
+			if(posY > HEIGHT) destroyed = true;
+		}
+	}
+	
+	//bullets
+	public class Shot{
+		
+		public boolean toRemove;
+		
+		int posX, posY, speed = 10;
+		static final int size = 6;
+		
+		public Shot(int posX, int posY) {
+			this.posX = posX;
+			this.posY = posY;
+		}
+		
+		public void update() {
+			posY -= speed;
+		}
+		
+		public void draw() {
+			gc.setFill(Color.RED);
+			if (score >= 50 && score <= 70 || score >= 120) {
+				gc.setFill(Color.YELLOWGREEN);
+				speed = 50;
+				gc.fillRect(posX-5, posX-10, size+10, size+30);
+			}else {
+				gc.fillOval(posX, posY, size, size);
+			}
+		}
+		
+		public boolean colide(Rocket Rocket) {
+			int distance = distance(this.posX + size / 2, this.posY + size / 2,
+					Rocket.posX + Rocket.size / 2, Rocket.posY + Rocket.size / 2);
+			return distance < Rocket.size / 2 + size / 2;
+		}
 		
 	}
+		
+	
 
 	
 	
