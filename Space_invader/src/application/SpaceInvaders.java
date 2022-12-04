@@ -16,7 +16,7 @@ public class SpaceInvaders extends Application{
     private static final int PLAYER_SIZE = 60;
     
     static final Image PLAYER_IMG = new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader/Player.png");
-    static final Image EXPLOSION_IMG = new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader/Explosion.png");
+    static final Image EXPLOSION_IMG = new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader/Image.Explosion.png");
     
     static final int EXPLOSION_W = 128;
     static final int EXPLOSION_ROWS = 3;
