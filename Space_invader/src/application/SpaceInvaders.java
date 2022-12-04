@@ -2,7 +2,6 @@ package application;
 
 import java.util.List;
 import java.util.Random;
-
 import javafx.application.Application;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
