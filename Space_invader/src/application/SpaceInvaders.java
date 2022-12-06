@@ -1,11 +1,29 @@
 package application;
 
+/* 
+ * SPACE INVADER GAME
+ * MADE BY HANIFI ABRAR SETIAWAN
+ * NRP 502511066
+ */
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class SpaceInvaders extends Application{
 	
@@ -46,10 +64,102 @@ public class SpaceInvaders extends Application{
     List<Universe> univ;
     List<Alien> Aliens;
     
-	@Override
-	public void start(Stage arg0) throws Exception {
-		// TODO Auto-generated method stub
+    private double mouseX;
+    private int score;
+    
+    
+    
+	//start
+	public void start(Stage stage) throws Exception {
+		Canvas canvas = new Canvas(WIDTH, HEIGHT);
+		gc = canvas.getGraphicsContext2D();
+		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> execute(gc)));
+		timeline.setCycleCount(Timeline.INDEFINITE);
+		timeline.play();
+		canvas.setCursor(Cursor.MOVE);
+		canvas.setOnMouseMoved(e -> mouseX = e.getX());
+		canvas.setOnMouseClicked(e -> {
+			if(shots.size() < MAX_SHOTS) shots.add(player.shoot());
+			if(gameOver) {
+				gameOver = false;
+				setup();
+			}
+		});
+		setup();
+		stage.setScene(new Scene (new StackPane(canvas)));
+		stage.setTitle("Imposter Invade");
+		stage.show();
+	}
+	
+	//setup the game
+	private void setup() {
+		univ = new ArrayList<>();
+		shots = new ArrayList<>();
+		Aliens = new ArrayList<>();
+		player = new Rocket(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
+		score = 0;
+		IntStream.range(0, MAX_ALIENS).mapToObj(i ->this.newAlien()).forEach(Aliens::add);
+	}
+	
+	//execute Graphics
+	private void execute(GraphicsContext gc) {
+		gc.setFill(Color.grayRgb(20));
+		gc.fillRect(0, 0, WIDTH, HEIGHT);
+		gc.setTextAlign(TextAlignment.CENTER);
+		gc.setFont(Font.font(20));
+		gc.setFill(Color.WHITE);
+		gc.fillText("Score: " + score, 60, 20);
 		
+		if(gameOver) {
+			gc.setFont(Font.font(35));
+			gc.setFill(Color.YELLOW);
+			gc.fillText("GAME OVER \n Your Score is: " + score + 
+					"\n Thank You For Playing" + "\n Click to play again \n" + "\n Made By Hanifi Abrar Setiawan",
+					WIDTH / 2, HEIGHT / 2.5);
+		}
+		univ.forEach(Universe::draw);
+		
+		player.update();
+		player.draw();
+		player.posX = (int) mouseX;
+		
+		Aliens.stream().peek(Rocket::update).peek(Rocket::draw).forEach(e ->{
+			if(player.colide(e) && !player.exploding) {
+				player.explode();
+			}
+		});
+		
+		for (int i = shots.size() - 1; i >= 0; i--) {
+			Shot shot = shots.get(i);
+			if(shot.posY < 0 || shot.toRemove) {
+				shots.remove(i);
+				continue;
+			}
+			shot.update();
+			shot.draw();
+			for (Alien Alien : Aliens) {
+				if (shot.colide(Alien) && !Alien.exploding) {
+					score++;
+					Alien.explode();
+					shot.toRemove = true;
+				}
+			}
+		}
+		
+		for (int i = Aliens.size() - 1; i >= 0; i--) {
+			if(Aliens.get(i).destroyed) {
+				Aliens.set(i, newAlien());
+			}
+		}
+		
+		gameOver = player.destroyed;
+		if(RAND.nextInt(10)>2) {
+			univ.add(new Universe());
+		}
+		for (int i = 0; i < univ.size(); i++) {
+			if(univ.get(i).posY > HEIGHT)
+				univ.remove(i);
+		}
 	}
 	
 	//player
@@ -58,7 +168,7 @@ public class SpaceInvaders extends Application{
 		int posX, posY, size;
 		boolean exploding, destroyed;
 		Image img;
-		int explosionsStep = 0;
+		int explosionStep = 0;
 		
 		//cons
 		public Rocket(int posX, int posY, int size, Image image) {
@@ -67,6 +177,7 @@ public class SpaceInvaders extends Application{
 			this.size = size;
 			img = image;
 		}
+		
 		public Shot shoot() {
 			return new Shot(posX+size / 2 - Shot.size / 2, posY - Shot.size);
 		}
@@ -148,15 +259,49 @@ public class SpaceInvaders extends Application{
 		}
 		
 	}
+	
+	//environment
+	public class Universe{
+		int posX, posY;
+		private int h,w,r,g,b;
+		private double opacity;
 		
+		public Universe() {
+			posX = RAND.nextInt(WIDTH);
+			posY = 0;
+			w = RAND.nextInt(5) + 1;
+			h = RAND.nextInt(5) + 1;
+			r = RAND.nextInt(100) + 150;
+			g = RAND.nextInt(100) + 150;
+			b = RAND.nextInt(100) + 150;
+			opacity = RAND.nextFloat();
+			if(opacity < 0) opacity *= -1;
+			if(opacity > 0.5) opacity = 0.5;
+		}
+		
+		public void draw() {
+			if(opacity > 0.8) opacity -= 0.01;
+			if(opacity > 0.1) opacity += 0.01;
+			gc.setFill(Color.rgb(r, g, b, opacity));
+			gc.fillOval(posX, posY, w, h);
+			posY += 20;
+		}
+	}
 	
-
+	Alien newAlien() {
+		return new Alien(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE,
+				ALIENS_IMG[RAND.nextInt(ALIENS_IMG.length)]);
+	}
+	
+	int distance(int x1, int y1, int x2, int y2) {
+		return (int) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
+	}
 	
 	
-	
-	
-	
-	
+	public static void main(String[]args) {
+		launch();
+	}
 	
 	
 }
+
