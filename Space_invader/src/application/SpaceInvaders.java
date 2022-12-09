@@ -33,8 +33,8 @@ public class SpaceInvaders extends Application{
     private static final int HEIGHT = 600;
     private static final int PLAYER_SIZE = 60;
     
-    static final Image PLAYER_IMG = new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Player.png");
-    static final Image EXPLOSION_IMG = new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Images.Explosion.png");
+    static final Image PLAYER_IMG = new Image("(file immage location)/Space Invader Images/Player.png");
+    static final Image EXPLOSION_IMG = new Image("(file immage location)/Space Invader Images/Images.Explosion.png");
     
     static final int EXPLOSION_W = 128;
     static final int EXPLOSION_ROWS = 3;
@@ -43,16 +43,16 @@ public class SpaceInvaders extends Application{
     static final int EXPLOSION_STEPS = 15;
     
     static final Image ALIENS_IMG[] = {
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien1.png"),
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien2.png"),
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien3.png"),
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien4.png"),
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien5.png"),
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien6.png"),
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien7.png"),
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien8.png"),
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien9.png"),
-    		new Image("file:C:/Users/Hanif/OneDrive/Pictures/Space Invader Images/Alien10.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien1.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien2.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien3.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien4.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien5.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien6.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien7.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien8.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien9.png"),
+    		new Image("(file immage location)/Space Invader Images/Alien10.png"),
     };
     
     final int MAX_ALIENS = 10, MAX_SHOTS = MAX_ALIENS * 2;
