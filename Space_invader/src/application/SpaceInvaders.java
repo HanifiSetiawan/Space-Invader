@@ -246,8 +246,14 @@ public class SpaceInvaders extends Application{
 			if (score >= 50 && score <= 70 || score >= 120) {
 				gc.setFill(Color.YELLOWGREEN);
 				speed = 50;
-				gc.fillRect(posX-5, posX-10, size+10, size+30);
-			}else {
+				gc.fillRect(posX-5, posX-5, size-30, size-30);
+			}
+			else if (score >= 100 && score <= 119 || score >= 170) {
+				gc.setFill(Color.CYAN);
+				speed = 70;
+				gc.fillRect(posX-10, posY-10, size - 40, size - 40);
+			}
+			else {
 				gc.fillOval(posX, posY, size, size);
 			}
 		}
