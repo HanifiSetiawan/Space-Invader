@@ -296,8 +296,13 @@ public class SpaceInvaders extends Application{
 	}
 	
 	Alien newAlien() {
-		return new Alien(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE,
-				ALIENS_IMG[RAND.nextInt(ALIENS_IMG.length)]);
+		try {
+			return new Alien(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE,
+					ALIENS_IMG[RAND.nextInt(ALIENS_IMG.length)]);
+		} catch (Exception e) {
+			System.out.println("ERROR");
+		}
+		return null;
 	}
 	
 	int distance(int x1, int y1, int x2, int y2) {
